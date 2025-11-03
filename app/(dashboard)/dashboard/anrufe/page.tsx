@@ -4,8 +4,10 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Phone, Download, Search, Filter, Eye } from 'lucide-react'
 import Link from 'next/link'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function AnrufePage() {
+  const { t } = useLanguage()
   const [calls, setCalls] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -85,8 +87,8 @@ export default function AnrufePage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Anrufe</h1>
-          <p className="text-gray-600 mt-2">Übersicht aller eingehenden Anrufe</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('calls')}</h1>
+          <p className="text-gray-600 mt-2">{t('calls_overview')}</p>
         </div>
         <button
           onClick={exportToCSV}
@@ -94,7 +96,7 @@ export default function AnrufePage() {
           style={{ backgroundColor: '#316bfe' }}
         >
           <Download size={20} />
-          CSV Exportieren
+          {t('export_csv')}
         </button>
       </div>
 
@@ -105,7 +107,7 @@ export default function AnrufePage() {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
             <input
               type="text"
-              placeholder="Suchen nach Name, Telefon oder Zusammenfassung..."
+              placeholder={t('search_placeholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#316bfe] focus:border-transparent outline-none"
@@ -118,11 +120,11 @@ export default function AnrufePage() {
               onChange={(e) => setFilterStatus(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#316bfe] focus:border-transparent outline-none appearance-none"
             >
-              <option value="all">Alle Status</option>
-              <option value="completed">Abgeschlossen</option>
-              <option value="missed">Verpasst</option>
-              <option value="forwarded">Weitergeleitet</option>
-              <option value="failed">Fehlgeschlagen</option>
+              <option value="all">{t('all_status')}</option>
+              <option value="completed">{t('completed')}</option>
+              <option value="missed">{t('missed')}</option>
+              <option value="forwarded">{t('forwarded')}</option>
+              <option value="failed">{t('failed')}</option>
             </select>
           </div>
         </div>
@@ -134,13 +136,13 @@ export default function AnrufePage() {
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Anrufer</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Telefon</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Startzeit</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dauer</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tags</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aktionen</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('caller')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('phone')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('start_time')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('duration')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('status')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('tags')}</th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{t('actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -153,7 +155,7 @@ export default function AnrufePage() {
                           {call.caller_name?.[0]?.toUpperCase() || 'U'}
                         </div>
                         <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">{call.caller_name || 'Unbekannt'}</div>
+                          <div className="text-sm font-medium text-gray-900">{call.caller_name || t('unknown')}</div>
                         </div>
                       </div>
                     </td>
@@ -177,10 +179,10 @@ export default function AnrufePage() {
                         call.call_status === 'forwarded' ? 'bg-blue-100 text-blue-800' :
                         'bg-gray-100 text-gray-800'
                       }`}>
-                        {call.call_status === 'completed' ? 'Abgeschlossen' :
-                         call.call_status === 'missed' ? 'Verpasst' :
-                         call.call_status === 'forwarded' ? 'Weitergeleitet' :
-                         call.call_status || 'Unbekannt'}
+                        {call.call_status === 'completed' ? t('completed') :
+                         call.call_status === 'missed' ? t('missed') :
+                         call.call_status === 'forwarded' ? t('forwarded') :
+                         call.call_status || t('unknown')}
                       </span>
                     </td>
                     <td className="px-6 py-4">
@@ -192,7 +194,7 @@ export default function AnrufePage() {
                             </span>
                           ))
                         ) : (
-                          <span className="text-xs text-gray-400">Keine Tags</span>
+                          <span className="text-xs text-gray-400">{t('no_tags')}</span>
                         )}
                       </div>
                     </td>
@@ -202,7 +204,7 @@ export default function AnrufePage() {
                         className="inline-flex items-center gap-1 text-[#316bfe] hover:text-[#2451cc]"
                       >
                         <Eye size={16} />
-                        Details
+                        {t('details')}
                       </Link>
                     </td>
                   </tr>
@@ -211,7 +213,7 @@ export default function AnrufePage() {
                 <tr>
                   <td colSpan={7} className="px-6 py-12 text-center">
                     <Phone size={48} className="mx-auto text-gray-300 mb-4" />
-                    <p className="text-gray-500">Keine Anrufe gefunden</p>
+                    <p className="text-gray-500">{t('no_calls_found')}</p>
                   </td>
                 </tr>
               )}
@@ -222,7 +224,7 @@ export default function AnrufePage() {
 
       {/* Stats Footer */}
       <div className="mt-4 text-sm text-gray-600">
-        Zeige {filteredCalls.length} von {calls.length} Anrufen
+        {t('showing_x_of_y_calls').replace('{x}', String(filteredCalls.length)).replace('{y}', String(calls.length))}
       </div>
     </div>
   )

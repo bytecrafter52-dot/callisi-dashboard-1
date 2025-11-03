@@ -3,8 +3,10 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { CheckSquare, Plus, Filter, X } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function AufgabenPage() {
+  const { t } = useLanguage()
   const [tasks, setTasks] = useState<any[]>([])
   const [employees, setEmployees] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -105,8 +107,8 @@ export default function AufgabenPage() {
     <div className="p-8">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Aufgaben</h1>
-          <p className="text-gray-600 mt-2">Verwalten Sie Ihre Aufgaben und Zuweisungen</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('tasks')}</h1>
+          <p className="text-gray-600 mt-2">{t('tasks_manage')}</p>
         </div>
         <button
           onClick={() => setShowModal(true)}
@@ -114,7 +116,7 @@ export default function AufgabenPage() {
           style={{ backgroundColor: '#316bfe' }}
         >
           <Plus size={20} />
-          Neue Aufgabe
+          {t('new_task')}
         </button>
       </div>
 
@@ -134,10 +136,10 @@ export default function AufgabenPage() {
                 }`}
                 style={filterStatus === status ? { backgroundColor: '#316bfe' } : {}}
               >
-                {status === 'all' ? 'Alle' :
-                 status === 'pending' ? 'Offen' :
-                 status === 'in_progress' ? 'In Bearbeitung' :
-                 'Abgeschlossen'}
+                {status === 'all' ? t('all') :
+                 status === 'pending' ? t('open') :
+                 status === 'in_progress' ? t('in_progress') :
+                 t('closed')}
               </button>
             ))}
           </div>
@@ -150,9 +152,9 @@ export default function AufgabenPage() {
           <div key={column} className="bg-gray-50 rounded-xl p-4">
             <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
               <CheckSquare size={20} style={{ color: '#316bfe' }} />
-              {column === 'pending' ? 'Offen' :
-               column === 'in_progress' ? 'In Bearbeitung' :
-               'Abgeschlossen'}
+              {column === 'pending' ? t('open') :
+               column === 'in_progress' ? t('in_progress') :
+               t('closed')}
               <span className="ml-auto text-sm bg-gray-200 px-2 py-1 rounded">
                 {tasks.filter(t => t.status === column).length}
               </span>
@@ -180,7 +182,7 @@ export default function AufgabenPage() {
                         onClick={() => updateTaskStatus(task.id, 'in_progress')}
                         className="flex-1 px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition"
                       >
-                        In Bearbeitung
+                        {t('in_progress')}
                       </button>
                     )}
                     {column !== 'completed' && (
@@ -188,14 +190,14 @@ export default function AufgabenPage() {
                         onClick={() => updateTaskStatus(task.id, 'completed')}
                         className="flex-1 px-3 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200 transition"
                       >
-                        Abschließen
+                        {t('mark_complete')}
                       </button>
                     )}
                   </div>
                 </div>
               ))}
               {tasks.filter(t => t.status === column).length === 0 && (
-                <p className="text-sm text-gray-400 text-center py-8">Keine Aufgaben</p>
+                <p className="text-sm text-gray-400 text-center py-8">{t('no_tasks')}</p>
               )}
             </div>
           </div>
@@ -207,14 +209,14 @@ export default function AufgabenPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Neue Aufgabe</h2>
+              <h2 className="text-2xl font-bold text-gray-900">{t('new_task')}</h2>
               <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">
                 <X size={24} />
               </button>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Titel *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('task_title')} *</label>
                 <input
                   type="text"
                   required
@@ -224,7 +226,7 @@ export default function AufgabenPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Beschreibung</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('task_description')}</label>
                 <textarea
                   rows={3}
                   value={formData.description}
@@ -233,20 +235,20 @@ export default function AufgabenPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Zuweisen an</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('assignee')}</label>
                 <select
                   value={formData.assignee_employee_id}
                   onChange={(e) => setFormData({...formData, assignee_employee_id: e.target.value})}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#316bfe] focus:border-transparent outline-none"
                 >
-                  <option value="">Nicht zugewiesen</option>
+                  <option value="">{t('no_assignee')}</option>
                   {employees.map(emp => (
                     <option key={emp.id} value={emp.id}>{emp.full_name}</option>
                   ))}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Fälligkeitsdatum</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('due_date')}</label>
                 <input
                   type="date"
                   value={formData.due_at}
@@ -260,14 +262,14 @@ export default function AufgabenPage() {
                   onClick={() => setShowModal(false)}
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
                 >
-                  Abbrechen
+                  {t('cancel')}
                 </button>
                 <button
                   type="submit"
                   className="flex-1 px-4 py-2 text-white rounded-lg hover:opacity-90 transition"
                   style={{ backgroundColor: '#316bfe' }}
                 >
-                  Erstellen
+                  {t('create_task')}
                 </button>
               </div>
             </form>

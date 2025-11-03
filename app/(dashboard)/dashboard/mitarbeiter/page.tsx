@@ -3,8 +3,10 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Users, Plus, Mail, Phone, X, Edit2, Trash2 } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function MitarbeiterPage() {
+  const { t } = useLanguage()
   const [employees, setEmployees] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
@@ -86,7 +88,7 @@ export default function MitarbeiterPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (confirm('Möchten Sie diesen Mitarbeiter wirklich löschen?')) {
+    if (confirm(t('delete_confirm'))) {
       await supabase
         .from('employees')
         .update({ is_active: false })
@@ -107,8 +109,8 @@ export default function MitarbeiterPage() {
     <div className="p-8">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Mitarbeiter</h1>
-          <p className="text-gray-600 mt-2">Verwalten Sie Ihr Team</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('employees')}</h1>
+          <p className="text-gray-600 mt-2">{t('manage_team')}</p>
         </div>
         <button
           onClick={() => {
@@ -120,7 +122,7 @@ export default function MitarbeiterPage() {
           style={{ backgroundColor: '#316bfe' }}
         >
           <Plus size={20} />
-          Mitarbeiter hinzufügen
+          {t('add_employee')}
         </button>
       </div>
 
@@ -132,21 +134,21 @@ export default function MitarbeiterPage() {
               <Users size={24} style={{ color: '#316bfe' }} />
             </div>
             <div>
-              <p className="text-sm text-gray-500">Gesamt</p>
+              <p className="text-sm text-gray-500">{t('total')}</p>
               <p className="text-2xl font-bold text-gray-900">{employees.filter(e => e.is_active).length}</p>
             </div>
           </div>
         </div>
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <p className="text-sm text-gray-500">Admins</p>
+          <p className="text-sm text-gray-500">{t('admin')}</p>
           <p className="text-2xl font-bold text-gray-900">{employees.filter(e => e.role === 'admin' && e.is_active).length}</p>
         </div>
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <p className="text-sm text-gray-500">Manager</p>
+          <p className="text-sm text-gray-500">{t('manager')}</p>
           <p className="text-2xl font-bold text-gray-900">{employees.filter(e => e.role === 'manager' && e.is_active).length}</p>
         </div>
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <p className="text-sm text-gray-500">Agents</p>
+          <p className="text-sm text-gray-500">{t('agent')}</p>
           <p className="text-2xl font-bold text-gray-900">{employees.filter(e => e.role === 'agent' && e.is_active).length}</p>
         </div>
       </div>
@@ -180,9 +182,9 @@ export default function MitarbeiterPage() {
               employee.role === 'manager' ? 'bg-blue-100 text-blue-700' :
               'bg-gray-100 text-gray-700'
             }`}>
-              {employee.role === 'admin' ? 'Administrator' :
-               employee.role === 'manager' ? 'Manager' :
-               'Agent'}
+              {employee.role === 'admin' ? t('admin') :
+               employee.role === 'manager' ? t('manager') :
+               t('agent')}
             </span>
             <div className="space-y-2 text-sm">
               <div className="flex items-center gap-2 text-gray-600">
@@ -203,7 +205,7 @@ export default function MitarbeiterPage() {
       {employees.filter(e => e.is_active).length === 0 && (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
           <Users size={48} className="mx-auto text-gray-300 mb-4" />
-          <p className="text-gray-500">Noch keine Mitarbeiter hinzugefügt</p>
+          <p className="text-gray-500">{t('no_employees')}</p>
         </div>
       )}
 
@@ -213,7 +215,7 @@ export default function MitarbeiterPage() {
           <div className="bg-white rounded-2xl max-w-md w-full p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-900">
-                {editingEmployee ? 'Mitarbeiter bearbeiten' : 'Mitarbeiter hinzufügen'}
+                {editingEmployee ? t('edit_employee') : t('add_employee')}
               </h2>
               <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">
                 <X size={24} />
@@ -221,7 +223,7 @@ export default function MitarbeiterPage() {
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('name')} *</label>
                 <input
                   type="text"
                   required
@@ -231,7 +233,7 @@ export default function MitarbeiterPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">E-Mail *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('email')} *</label>
                 <input
                   type="email"
                   required
@@ -241,7 +243,7 @@ export default function MitarbeiterPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Telefon</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('phone_number')}</label>
                 <input
                   type="tel"
                   value={formData.phone}
@@ -250,16 +252,16 @@ export default function MitarbeiterPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Rolle *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('role')} *</label>
                 <select
                   required
                   value={formData.role}
                   onChange={(e) => setFormData({...formData, role: e.target.value})}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#316bfe] focus:border-transparent outline-none"
                 >
-                  <option value="agent">Agent</option>
-                  <option value="manager">Manager</option>
-                  <option value="admin">Administrator</option>
+                  <option value="agent">{t('agent')}</option>
+                  <option value="manager">{t('manager')}</option>
+                  <option value="admin">{t('admin')}</option>
                 </select>
               </div>
               <div className="flex gap-3 pt-4">
@@ -268,14 +270,14 @@ export default function MitarbeiterPage() {
                   onClick={() => setShowModal(false)}
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
                 >
-                  Abbrechen
+                  {t('cancel')}
                 </button>
                 <button
                   type="submit"
                   className="flex-1 px-4 py-2 text-white rounded-lg hover:opacity-90 transition"
                   style={{ backgroundColor: '#316bfe' }}
                 >
-                  {editingEmployee ? 'Aktualisieren' : 'Hinzufügen'}
+                  {editingEmployee ? t('save') : t('add_employee')}
                 </button>
               </div>
             </form>

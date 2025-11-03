@@ -3,8 +3,10 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { BarChart3, TrendingUp, Phone, Clock, Users, Calendar } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function StatistikenPage() {
+  const { t } = useLanguage()
   const [stats, setStats] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [timeRange, setTimeRange] = useState('week') // week, month, year
@@ -117,8 +119,8 @@ export default function StatistikenPage() {
     <div className="p-8">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Statistiken</h1>
-          <p className="text-gray-600 mt-2">Übersicht Ihrer Anruf- und Aufgabenstatistiken</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('statistics')}</h1>
+          <p className="text-gray-600 mt-2">{t('stats_overview')}</p>
         </div>
         <div className="flex gap-2">
           {['week', 'month', 'year'].map(range => (
@@ -132,7 +134,7 @@ export default function StatistikenPage() {
               }`}
               style={timeRange === range ? { backgroundColor: '#316bfe' } : {}}
             >
-              {range === 'week' ? 'Woche' : range === 'month' ? 'Monat' : 'Jahr'}
+              {range === 'week' ? t('week') : range === 'month' ? t('month') : t('year')}
             </button>
           ))}
         </div>
@@ -147,8 +149,8 @@ export default function StatistikenPage() {
             </div>
             <span className="text-2xl font-bold text-gray-900">{stats?.totalCalls || 0}</span>
           </div>
-          <h3 className="text-sm font-medium text-gray-600">Anrufe gesamt</h3>
-          <p className="text-xs text-gray-500 mt-1">in gewähltem Zeitraum</p>
+          <h3 className="text-sm font-medium text-gray-600">{t('total_calls')}</h3>
+          <p className="text-xs text-gray-500 mt-1">{t('calls_in_selected').replace('{count}', '')}</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -158,8 +160,8 @@ export default function StatistikenPage() {
             </div>
             <span className="text-2xl font-bold text-gray-900">{stats?.completionRate || 0}%</span>
           </div>
-          <h3 className="text-sm font-medium text-gray-600">Erfolgsquote</h3>
-          <p className="text-xs text-gray-500 mt-1">{stats?.completedCalls || 0} abgeschlossen</p>
+          <h3 className="text-sm font-medium text-gray-600">{t('success_rate')}</h3>
+          <p className="text-xs text-gray-500 mt-1">{t('calls_in_selected').replace('{count}', String(stats?.completedCalls || 0))}</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -169,7 +171,7 @@ export default function StatistikenPage() {
             </div>
             <span className="text-2xl font-bold text-gray-900">{Math.floor((stats?.avgDuration || 0) / 60)}m</span>
           </div>
-          <h3 className="text-sm font-medium text-gray-600">Durchschnittsdauer</h3>
+          <h3 className="text-sm font-medium text-gray-600">{t('avg_duration_stat')}</h3>
           <p className="text-xs text-gray-500 mt-1">{stats?.avgDuration || 0}s gesamt</p>
         </div>
 
@@ -180,8 +182,8 @@ export default function StatistikenPage() {
             </div>
             <span className="text-2xl font-bold text-gray-900">{stats?.activeEmployees || 0}</span>
           </div>
-          <h3 className="text-sm font-medium text-gray-600">Aktive Mitarbeiter</h3>
-          <p className="text-xs text-gray-500 mt-1">im Team</p>
+          <h3 className="text-sm font-medium text-gray-600">{t('active_employees')}</h3>
+          <p className="text-xs text-gray-500 mt-1">{t('in_team')}</p>
         </div>
       </div>
 
@@ -190,27 +192,27 @@ export default function StatistikenPage() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
             <BarChart3 size={24} style={{ color: '#316bfe' }} />
-            Anrufstatus
+            {t('call_status')}
           </h2>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-4 h-4 rounded-full bg-green-500"></div>
-                <span className="text-gray-700">Abgeschlossen</span>
+                <span className="text-gray-700">{t('completed')}</span>
               </div>
               <span className="font-bold text-gray-900">{stats?.completedCalls || 0}</span>
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-4 h-4 rounded-full bg-red-500"></div>
-                <span className="text-gray-700">Verpasst</span>
+                <span className="text-gray-700">{t('missed')}</span>
               </div>
               <span className="font-bold text-gray-900">{stats?.missedCalls || 0}</span>
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-4 h-4 rounded-full bg-blue-500"></div>
-                <span className="text-gray-700">Weitergeleitet</span>
+                <span className="text-gray-700">{t('forwarded')}</span>
               </div>
               <span className="font-bold text-gray-900">{stats?.forwardedCalls || 0}</span>
             </div>
@@ -220,7 +222,7 @@ export default function StatistikenPage() {
           <div className="mt-6 space-y-3">
             <div>
               <div className="flex justify-between text-xs text-gray-600 mb-1">
-                <span>Abgeschlossen</span>
+                <span>{t('completed')}</span>
                 <span>{stats?.completionRate || 0}%</span>
               </div>
               <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
@@ -237,20 +239,20 @@ export default function StatistikenPage() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
             <Calendar size={24} style={{ color: '#316bfe' }} />
-            Aufgaben
+            {t('task_status')}
           </h2>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-4 h-4 rounded-full bg-yellow-500"></div>
-                <span className="text-gray-700">Offen</span>
+                <span className="text-gray-700">{t('pending_tasks')}</span>
               </div>
               <span className="font-bold text-gray-900">{stats?.pendingTasks || 0}</span>
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-4 h-4 rounded-full bg-green-500"></div>
-                <span className="text-gray-700">Abgeschlossen</span>
+                <span className="text-gray-700">{t('completed')}</span>
               </div>
               <span className="font-bold text-gray-900">{stats?.completedTasks || 0}</span>
             </div>
@@ -259,7 +261,7 @@ export default function StatistikenPage() {
           {/* Task Completion Rate */}
           <div className="mt-6">
             <div className="flex justify-between text-xs text-gray-600 mb-1">
-              <span>Erledigungsrate</span>
+              <span>{t('completion_rate')}</span>
               <span>
                 {stats?.pendingTasks + stats?.completedTasks > 0
                   ? Math.round((stats?.completedTasks / (stats?.pendingTasks + stats?.completedTasks)) * 100)
@@ -282,7 +284,7 @@ export default function StatistikenPage() {
 
       {/* Daily Activity */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-6">Tägliche Aktivität</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-6">{t('daily_activity')}</h2>
         {stats?.callsByDay && Object.keys(stats.callsByDay).length > 0 ? (
           <div className="space-y-2">
             {Object.entries(stats.callsByDay).map(([date, count]: [string, any]) => (

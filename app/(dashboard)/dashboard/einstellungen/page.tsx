@@ -3,8 +3,10 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { User, Lock, Bell, Save } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function EinstellungenPage() {
+  const { t } = useLanguage()
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
