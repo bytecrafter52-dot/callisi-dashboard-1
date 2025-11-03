@@ -164,8 +164,8 @@ export default function EinstellungenPage() {
 
   return (
     <div className="p-8 max-w-4xl">
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">Einstellungen</h1>
-      <p className="text-gray-600 mb-8">Verwalten Sie Ihr Konto und Ihre Präferenzen</p>
+      <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('settings')}</h1>
+      <p className="text-gray-600 mb-8">{t('manage_account')}</p>
 
       {message && (
         <div className={`mb-6 p-4 rounded-lg ${
@@ -181,11 +181,11 @@ export default function EinstellungenPage() {
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-6">
         <div className="px-6 py-4 border-b border-gray-200 flex items-center gap-3">
           <User size={24} style={{ color: '#316bfe' }} />
-          <h2 className="text-xl font-bold text-gray-900">Profil</h2>
+          <h2 className="text-xl font-bold text-gray-900">{t('profile_section')}</h2>
         </div>
         <div className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Vollständiger Name</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('full_name')}</label>
             <input
               type="text"
               value={profileData.full_name}
@@ -194,7 +194,7 @@ export default function EinstellungenPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Firmenname</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('company_name')}</label>
             <input
               type="text"
               value={profileData.company_name}
@@ -203,7 +203,7 @@ export default function EinstellungenPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">E-Mail</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('email')}</label>
             <input
               type="email"
               value={profileData.email}
@@ -230,11 +230,11 @@ export default function EinstellungenPage() {
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-6">
         <div className="px-6 py-4 border-b border-gray-200 flex items-center gap-3">
           <Lock size={24} style={{ color: '#316bfe' }} />
-          <h2 className="text-xl font-bold text-gray-900">Passwort ändern</h2>
+          <h2 className="text-xl font-bold text-gray-900">{t('password_section')}</h2>
         </div>
         <div className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Neues Passwort</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('new_password')}</label>
             <input
               type="password"
               value={passwordData.newPassword}
@@ -244,7 +244,7 @@ export default function EinstellungenPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Passwort bestätigen</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('confirm_password')}</label>
             <input
               type="password"
               value={passwordData.confirmPassword}
@@ -269,7 +269,7 @@ export default function EinstellungenPage() {
       <div className="bg-white rounded-xl shadow-sm border border-gray-200">
         <div className="px-6 py-4 border-b border-gray-200 flex items-center gap-3">
           <Bell size={24} style={{ color: '#316bfe' }} />
-          <h2 className="text-xl font-bold text-gray-900">Benachrichtigungen</h2>
+          <h2 className="text-xl font-bold text-gray-900">{t('notification_section')}</h2>
         </div>
         <div className="p-6 space-y-4">
           <div className="flex items-center justify-between">
