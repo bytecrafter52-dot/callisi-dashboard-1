@@ -118,6 +118,16 @@ export async function POST(
               tags: tags || []
             })
             .eq('id', call.id);
+
+          // Send new call notification (non-blocking)
+          fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://callisi-dashboard1.vercel.app'}/api/notifications/new-call`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              callId: call.id,
+              orgId: lkproj.org_id
+            })
+          }).catch(err => console.error('Failed to send new call notification:', err));
         } else {
           const { error } = await sb
             .from('calls')

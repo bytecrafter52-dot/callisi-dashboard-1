@@ -60,7 +60,7 @@ export default function MitarbeiterPage() {
         .update(formData)
         .eq('id', editingEmployee.id)
     } else {
-      await supabase
+      const { data: newEmployee } = await supabase
         .from('employees')
         .insert({
           ...formData,
@@ -68,6 +68,21 @@ export default function MitarbeiterPage() {
           is_active: true,
           invited_at: new Date().toISOString()
         })
+        .select()
+        .single()
+
+      // Send invitation email
+      if (newEmployee) {
+        fetch('/api/notifications/employee-invite', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            employeeId: newEmployee.id,
+            orgId: membership?.org_id,
+            invitedBy: user?.id
+          })
+        }).catch(err => console.error('Failed to send invitation:', err))
+      }
     }
 
     setShowModal(false)

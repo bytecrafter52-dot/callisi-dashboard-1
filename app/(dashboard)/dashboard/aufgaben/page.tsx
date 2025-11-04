@@ -63,7 +63,7 @@ export default function AufgabenPage() {
       .eq('user_id', user?.id)
       .single()
 
-    const { error } = await supabase
+    const { data: newTask, error } = await supabase
       .from('tasks')
       .insert({
         ...formData,
@@ -71,11 +71,26 @@ export default function AufgabenPage() {
         created_by: user?.id,
         status: 'pending'
       })
+      .select()
+      .single()
 
-    if (!error) {
+    if (!error && newTask) {
       setShowModal(false)
       setFormData({ title: '', description: '', assignee_employee_id: '', due_at: '', call_id: null })
       loadData()
+
+      // Send notification if task is assigned to an employee
+      if (formData.assignee_employee_id) {
+        fetch('/api/notifications/task-assigned', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            taskId: newTask.id,
+            assigneeEmployeeId: formData.assignee_employee_id,
+            orgId: membership?.org_id
+          })
+        }).catch(err => console.error('Failed to send task notification:', err))
+      }
     }
   }
 
